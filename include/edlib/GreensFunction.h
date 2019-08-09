@@ -123,8 +123,12 @@ namespace EDLib {
         // compute partition function
         for (auto kkk = hamiltonian().eigenpairs().begin(); kkk != hamiltonian().eigenpairs().end(); kkk++) {
           const EigenPair<precision, typename Hamiltonian::ModelType::Sector> &eigenpair = *kkk;
-          _Z += std::exp(-(eigenpair.eigenvalue() - groundstate.eigenvalue()) * beta());
+          precision boltzmann_f = std::exp(-(eigenpair.eigenvalue() - groundstate.eigenvalue()) * beta());
+          if (std::abs(boltzmann_f) >= _cutoff ) {
+          _Z += boltzmann_f ;
+          }
         }
+
         // iterate over eigen-pairs
         for (auto kkk = hamiltonian().eigenpairs().begin(); kkk != hamiltonian().eigenpairs().end(); kkk++) {
           const EigenPair<precision, typename Hamiltonian::ModelType::Sector>& pair = *kkk;
